@@ -8,6 +8,7 @@ local chrootdir = "/"
 local staticDirs = {
   [1] = "rom",
 }
+
 mounter = {}
 local aware = false
 
@@ -93,42 +94,45 @@ fs.list = function(path)
   return dirs
 end
 
-_G.fs.exists = function(path)
+fs.exists = function(path)
   return oldFs.exists(getRealPath(path))
 end
 
-_G.fs.isDir = function(path)
+fs.isDir = function(path)
   return oldFs.isDir(getRealPath(path))
 end
 
-_G.fs.isReadOnly = function(path)
+fs.isReadOnly = function(path)
   return oldFs.isReadOnly(getRealPath(path))
 end
 
-_G.fs.getDrive = function(path)
+fs.getDrive = function(path)
   return oldFs.getDrive(getRealPath(path))
 end
 
-_G.fs.getSize = function(path)
+fs.getSize = function(path)
   return oldFs.getSize(getRealPath(path))
 end
 
-_G.fs.makeDir = function(path)
+fs.makeDir = function(path)
   return oldFs.makeDir(getRealPath(path))
 end
 
-_G.fs.move = function(from, to)
+fs.move = function(from, to)
   return oldFs.move(getRealPath(from), getRealPath(to))
 end
 
-_G.fs.copy = function(from, to)
+fs.copy = function(from, to)
   return oldFs.copy(getRealPath(from), getRealPath(to))
 end
 
-_G.fs.delete = function(path)
+fs.delete = function(path)
   return oldFs.delete(getRealPath(path))
 end
 
-_G.fs.open = function(path, mode)
+fs.open = function(path, mode)
   return oldFs.open(getRealPath(path), mode)
 end
+
+
+
