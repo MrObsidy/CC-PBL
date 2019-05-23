@@ -5,8 +5,6 @@ local function crash(reason)
   print(reason)
   
   print("Proceeding to run in CraftOS root!")
-  print("Type pblhelp to get some additional")
-  print("Commands specified by this bootloader.")
   print("")
   print("Press enter to continue to CraftOS")
   term.setTextColor(colors.white)
