@@ -1,0 +1,134 @@
+--mounter API
+--mounter is an essential part of PBL
+--As with every one of my works, mounter is GNU GPLv3
+
+local oldFs = {}
+local chrooted = false
+local chrootdir = "/"
+local staticDirs = {
+  [1] = "rom",
+}
+mounter = {}
+local aware = false
+
+mounter.initialize = function()
+
+end
+
+mounter.setAware = function(bool)
+  aware = bool
+end
+
+mounter.mount = function(device, directory)
+  
+end
+
+mounter.getMountPath = function(device)
+  
+end
+
+mounter.unmount = function(device)
+  
+end
+
+mounter.chroot = function(directory)
+  if chrooted then return false end
+  chrooted = true
+  
+  chrootdir = oldFs.combine("", directory)
+  
+  return chrootdir
+  
+end
+
+--Use this to add in directorys which will always
+--be accessed via root, by default this is only "rom"
+mounter.addStaticDir = function(path)
+  table.insert(staticDirs, path)
+end
+
+--This breaks a ton of stuff and should never be used
+mounter.unChroot = function()
+  chrooted = false
+  chrootdir = "/"
+end
+
+mounter.getChrootDir = function()
+  return chrootdir
+end
+
+--do a deep copy of fs
+
+for k, v in pairs(_G["fs"]) do
+  oldFs[k] = v
+end
+
+local function getStart(path, pattern)
+  return string.sub(path, 1, string.len(pattern)) == pattern
+end
+
+local function getRealPath(path)
+  for k, v in pairs(staticDirs) do
+    if getStart(oldFs.combine("", path), v) then
+      return path
+    end
+  end
+  
+  local realPath = oldFs.combine(chrootdir, path)
+  
+  return realPath
+end
+
+local function isRoot(directory)
+  return oldFs.combine(chrootdir, "") == oldFs.combine(directory, "")
+end
+
+fs.list = function(path)
+  local dirs = oldFs.list(getRealPath(path))
+  
+  if isRoot(getRealPath(path)) then
+    table.insert(dirs, "rom")
+  end
+  
+  return dirs
+end
+
+_G.fs.exists = function(path)
+  return oldFs.exists(getRealPath(path))
+end
+
+_G.fs.isDir = function(path)
+  return oldFs.isDir(getRealPath(path))
+end
+
+_G.fs.isReadOnly = function(path)
+  return oldFs.isReadOnly(getRealPath(path))
+end
+
+_G.fs.getDrive = function(path)
+  return oldFs.getDrive(getRealPath(path))
+end
+
+_G.fs.getSize = function(path)
+  return oldFs.getSize(getRealPath(path))
+end
+
+_G.fs.makeDir = function(path)
+  return oldFs.makeDir(getRealPath(path))
+end
+
+_G.fs.move = function(from, to)
+  return oldFs.move(getRealPath(from), getRealPath(to))
+end
+
+_G.fs.copy = function(from, to)
+  return oldFs.copy(getRealPath(from), getRealPath(to))
+end
+
+_G.fs.delete = function(path)
+  return oldFs.delete(getRealPath(path))
+end
+
+_G.fs.open = function(path, mode)
+  return oldFs.open(getRealPath(path), mode)
+end
