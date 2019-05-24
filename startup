@@ -102,6 +102,8 @@ print("Loading menu")
 sleep(2)
 
 term.clear()
+term.setBackgroundColor(colors.white)
+term.setTextColor(colors.purple)
 term.setCursorPos(1,1)
 
 local tX, tY = term.getSize()
@@ -138,7 +140,11 @@ local function display()
   for k, v in pairs(oses) do
     local currYH = yH + (k - 1)
     if k == activeEntry then
-      printCentered("[ "..v.description.." ]", currYH)
+      term.setTextColor(colors.white)
+      term.setBackgroundColor(colors.purple)
+      printCentered(" "..v.description.." ", currYH)
+      term.setTextColor(colors.purple)
+      term.setBackgroundColor(colors.white)
     else
       printCentered(v.description, currYH)
     end
@@ -167,6 +173,8 @@ while running do
   getInput()
 end
 
+term.setBackgroundColor(colors.black)
+term.setTextColor(colors.white)
 term.clear()
 term.setCursorPos(1,1)
 
