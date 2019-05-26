@@ -5,6 +5,7 @@ local function crash(reason)
   print(reason)
   
   print("Proceeding to run in CraftOS root!")
+  print("For additional commands, run: pblhelp")
   print("")
   print("Press enter to continue to CraftOS")
   term.setTextColor(colors.white)
@@ -14,6 +15,7 @@ end
 
 term.clear()
 term.setCursorPos(1,1)
+shell.setPath(shell.path()..":".."/tools/")
 print("Partitioning Bootloader (PBL) is starting...")
 print("Retrieving path...")
 local path = shell.getRunningProgram()
