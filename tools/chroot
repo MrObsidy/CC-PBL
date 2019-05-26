@@ -1,0 +1,7 @@
+local args = {...}
+
+if #args ~= 1 then
+  error("Usage: chroot <dir>")
+end
+
+mounter.chroot(args[1])
