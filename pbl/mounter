@@ -9,27 +9,51 @@ local staticDirs = {
   [1] = "rom",
 }
 
+local mountDirs = {}
+
 mounter = {}
-local aware = false
 
 mounter.initialize = function()
-
+  --do nothing, really
 end
 
-mounter.setAware = function(bool)
-  aware = bool
-end
-
-mounter.mount = function(device, directory)
+mounter.mount = function(dirFrom, directory)
+  local innerTable = {
+    source = dirFrom,
+    dir = directory,
+  }
+  
+  table.insert(mountDirs, innerTable)
   
 end
 
-mounter.getMountPath = function(device)
+mounter.getMountPath = function(dirFrom)
+  for k, v in pairs(mountDirs) do
+    if v.source == dirFrom then
+      return v.dir
+    end
+  end
+  
+  return nil
   
 end
 
 mounter.unmount = function(device)
   
+  local toremove = nil
+  
+  for k, v in pairs(mountDirs) do
+    if v.source == device then
+      toremove = k
+    end
+  end
+  
+  if toremove then
+    table.remove(mountDirs, toremove)
+    return true
+  else
+    return false
+  end
 end
 
 mounter.chroot = function(directory)
@@ -68,16 +92,32 @@ local function getStart(path, pattern)
   return string.sub(path, 1, string.len(pattern)) == pattern
 end
 
+local function getRest(path, pattern)
+  return string.sub(path, 1 + string.len(pattern)) 
+end
+
 local function getRealPath(path)
+  if type(path) ~= "string" then error("Expected string, got: "..type(path)) end
   for k, v in pairs(staticDirs) do
     if getStart(oldFs.combine("", path), v) then
       return path
     end
   end
   
+  for k, v in pairs(mountDirs) do
+    if getStart(oldFs.combine("", path), oldFs.combine("", v.dir)) then
+      local rest = getRest(oldFs.combine("", path), oldFs.combine("", v.dir))
+      return fs.combine(v.source, rest)
+    end
+  end
+  
   local realPath = oldFs.combine(chrootdir, path)
   
   return realPath
+end
+
+function debug_realpath(path)
+  return getRealPath(path)
 end
 
 local function isRoot(directory)
@@ -134,5 +174,12 @@ fs.open = function(path, mode)
   return oldFs.open(getRealPath(path), mode)
 end
 
+fs.find = function(path)
+  return oldFs.find(getRealPath(path))
+end
+
+fs.getDir = function(path)
+  return oldFs.getDir(getRealPath(path))
+end
 
 
