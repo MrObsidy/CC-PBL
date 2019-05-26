@@ -215,6 +215,16 @@ end
 
 print("Performing chroot")
 
+if not chosenOS.aware then
+  print("The chosen OS is not aware that it is being run in a sandboxed environment. Automatically mounting all disk drives...")
+  local drv = fs.find("/disk*/")
+  for k, v in pairs(drv) do
+    mounter.mount(v, fs.combine(chosenOS.directory, v))
+  end
+end
+
+
+
 mounter.chroot(chosenOS.directory)
 print("Done!")
 print("Running startup...")
