@@ -1,0 +1,7 @@
+local args = {...}
+
+if #args ~= 2 then
+  error("Usage: mnt <source> <target>")
+end
+
+mounter.mount(args[1], args[2])
