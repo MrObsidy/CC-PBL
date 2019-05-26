@@ -1,0 +1,5 @@
+print("These commands exist: ")
+print("mnt <source> <target> to mount a directory/drive/partition")
+print("umnt <source> to undo a mnt command")
+print("chroot <dir> to change the root directory to <dir>")
+print("uchroot to reset the root drive back to /")
