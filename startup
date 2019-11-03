@@ -225,7 +225,7 @@ print("Done!")
 
 if not chosenOS.aware then
   print("The chosen OS is not aware that it is being run in a sandboxed environment. Automatically mounting all disk drives...")
-  for k, v in pairs(drv) do
+  for k, v in pairs(disks) do
     mounter.mount(v, v)
   end
   print("Mounting mounting tools for manual mounting after the fact.")
