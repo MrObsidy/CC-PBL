@@ -33,6 +33,11 @@ local succ = shell.run("/pbl/mounter")
 
 if not succ then crash("Failing to mount root.") end
 
+print("Checking for disk drives..")
+disks = fs.find("/disk*/")
+
+print(#disks.." were found.)
+
 print("Parsing partition configuration..")
 
 if not fs.exists("/pbl/part.cfg") then
@@ -215,18 +220,16 @@ end
 
 print("Performing chroot")
 
+mounter.chroot(chosenOS.directory)
+print("Done!")
+
 if not chosenOS.aware then
   print("The chosen OS is not aware that it is being run in a sandboxed environment. Automatically mounting all disk drives...")
-  local drv = fs.find("/disk*/")
   for k, v in pairs(drv) do
-    mounter.mount(v, fs.combine(chosenOS.directory, v))
+    mounter.mount(v, v)
   end
 end
 
-
-
-mounter.chroot(chosenOS.directory)
-print("Done!")
 print("Running startup...")
 sleep(2)
 shell.run("startup")
