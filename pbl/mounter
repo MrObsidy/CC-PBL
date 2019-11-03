@@ -11,7 +11,7 @@ local staticDirs = {
 
 local mountDirs = {}
 
-mounter = {}
+_G.mounter = {}
 
 mounter.initialize = function()
   --do nothing, really
