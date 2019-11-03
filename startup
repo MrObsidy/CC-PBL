@@ -36,7 +36,7 @@ if not succ then crash("Failing to mount root.") end
 print("Checking for disk drives..")
 disks = fs.find("/disk*/")
 
-print(#disks.." were found.)
+print(#disks.." were found.")
 
 print("Parsing partition configuration..")
 
