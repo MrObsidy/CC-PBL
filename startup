@@ -228,6 +228,8 @@ if not chosenOS.aware then
   for k, v in pairs(drv) do
     mounter.mount(v, v)
   end
+  print("Mounting mounting tools for manual mounting after the fact.")
+  mounter.mount("/tools/", "/tools")
 end
 
 print("Running startup...")
